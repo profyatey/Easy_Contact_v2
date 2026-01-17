@@ -1,16 +1,14 @@
 // ----------------- main.dart -----------------
 import 'dart:io';
-
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:share_plus/share_plus.dart';
-import 'dart:typed_data';
 
+// ignore: unused_import
 void main() {
   runApp(
     MaterialApp(
-      title: 'Contacts Excel Exporter',
+      title: 'Easy Contactsv2',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -144,27 +142,6 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
   }
 
   // ---------- EXPORT & SHARE ----------
-  Future<void> _exportAndShare() async {
-    if (contacts.isEmpty) {
-      setState(() => status = 'No contacts to export!');
-      return;
-    }
-
-    try {
-      final excel = _buildExcel('Contacts');
-      final bytes = excel.encode();
-      if (bytes == null) throw Exception('Excel encoding failed');
-
-      final tempFileName = 'contacts_${_timeStamp()}.xlsx';
-      await Share.shareXFiles([
-        XFile.fromData(Uint8List.fromList(bytes), name: tempFileName),
-      ], text: 'Exported contacts Excel file');
-
-      setState(() => status = 'File shared successfully');
-    } catch (e) {
-      setState(() => status = 'Export failed: $e');
-    }
-  }
 
   // ---------- CONTACT MANAGEMENT ----------
   void _addContact() {
@@ -278,11 +255,7 @@ class _ContactInputScreenState extends State<ContactInputScreen> {
               height: 300,
               child: SingleChildScrollView(child: _buildContactList()),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _exportAndShare,
-              child: const Text('Export & Share Excel'),
-            ),
+
             const SizedBox(height: 20),
             Text(status),
           ],
